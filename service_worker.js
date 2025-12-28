@@ -1,4 +1,4 @@
-import { parseEvent } from "./eventParser.js";
+import { parseEvent } from "./lib/eventParser/index.js";
 
 chrome.runtime.onInstalled.addListener(async () => {
   chrome.contextMenus.create({
