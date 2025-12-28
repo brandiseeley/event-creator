@@ -56,7 +56,7 @@ async function extractEventInfo(text, apiKey) {
   return JSON.parse(data.output[0].content[0].text)
 }
 
-async function parseEvent(selectionText) {
+export async function parseEvent(selectionText) {
   console.log('Parsing event with text:', selectionText);
   const openaiApiKey = await getOpenaiApiKey();
   const response = await extractEventInfo(selectionText, openaiApiKey);

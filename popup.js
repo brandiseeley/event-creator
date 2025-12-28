@@ -1,3 +1,5 @@
+import { parseEvent } from "./eventParser.js";
+
 document.addEventListener("DOMContentLoaded", () => {
   const apiForm = document.getElementById("apiKeyForm");
   apiForm.addEventListener("submit", (event) => {
