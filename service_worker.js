@@ -1,3 +1,5 @@
+importScripts("eventParser.js");
+
 chrome.runtime.onInstalled.addListener(async () => {
   chrome.contextMenus.create({
     id: "create-event",
@@ -9,10 +11,7 @@ chrome.runtime.onInstalled.addListener(async () => {
 chrome.contextMenus.onClicked.addListener((info) => {
   if (info.menuItemId === "create-event") { 
     console.log("Selected text:", info.selectionText);
-    createEvent(info.selectionText);
+    const event = parseEvent(info.selectionText);
+    console.log("Event created:", event);
   }
 });
-
-function createEvent(selectionText) {
-  console.log('Creating event with text:', selectionText);
-}
