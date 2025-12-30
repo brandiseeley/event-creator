@@ -1,3 +1,10 @@
 module.exports = {
-  extends: ["airbnb-base"],
+  extends: ['airbnb-base'],
+  parserOptions: {
+    ecmaVersion: 2022,
+    sourceType: 'module',
+  },
+  rules: {
+    'no-console': 'off',
+  },
 };
