@@ -1,30 +1,22 @@
-/* global chrome, document */
+/* global document chrome */
 
-import parseEvent from './lib/eventParser/index.js';
-import CalendarEvent from './lib/googleCalendar/index.js';
+import createCalendarLinkFromText from './createCalendarLinkFromText.js';
 
-document.addEventListener('DOMContentLoaded', () => {
-  const apiForm = document.getElementById('apiKeyForm');
-  apiForm.addEventListener('submit', (event) => {
-    event.preventDefault();
-    chrome.storage.local.set({ apiKey: event.target.apiKey.value });
+const testButton = document.getElementById('testButton');
 
-    chrome.storage.local.get('apiKey', ({ apiKey }) => {
-      console.log('API Key stored as:', apiKey);
+testButton.addEventListener('click', async () => {
+  const text = "LS Women's Group | Fundamentals at Work | Sunday, December 21st | 2PM ET / 11AM PT / 8PM CET";
+
+  try {
+    const eventUrl = await createCalendarLinkFromText(text);
+    const anchorElement = document.getElementById('link');
+    anchorElement.textContent = 'Create Google Calendar Event';
+    anchorElement.href = eventUrl;
+    anchorElement.addEventListener('click', (event) => {
+      event.preventDefault();
+      chrome.tabs.create({ url: eventUrl });
     });
-  });
-
-  const testButton = document.getElementById('testButton');
-  testButton.addEventListener('click', async () => {
-    console.log('Test button clicked');
-
-    const { apiKey } = await chrome.storage.local.get('apiKey');
-    console.log('API Key stored as:', apiKey);
-
-    const eventDetails = await parseEvent("LS Women's Group | Fundamentals at Work | Sunday, December 21st | 2PM ET / 11AM PT / 8PM CET", apiKey);
-    console.log('Event details: ', eventDetails);
-
-    const eventUrl = new CalendarEvent(eventDetails).link;
-    console.log('Event URL: ', eventUrl);
-  });
+  } catch (err) {
+    console.error(err);
+  }
 });
