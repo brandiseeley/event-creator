@@ -1,6 +1,7 @@
 /* global chrome, document */
 
 import parseEvent from './lib/eventParser/index.js';
+import CalendarEvent from './lib/googleCalendar/index.js';
 
 document.addEventListener('DOMContentLoaded', () => {
   const apiForm = document.getElementById('apiKeyForm');
@@ -16,6 +17,14 @@ document.addEventListener('DOMContentLoaded', () => {
   const testButton = document.getElementById('testButton');
   testButton.addEventListener('click', async () => {
     console.log('Test button clicked');
-    console.log(await parseEvent("LS Women's Group | Fundamentals at Work | Sunday, December 21st | 12PM ET / 9AM PT / 6PM CET"));
+
+    const { apiKey } = await chrome.storage.local.get('apiKey');
+    console.log('API Key stored as:', apiKey);
+
+    const eventDetails = await parseEvent("LS Women's Group | Fundamentals at Work | Sunday, December 21st | 2PM ET / 11AM PT / 8PM CET", apiKey);
+    console.log('Event details: ', eventDetails);
+
+    const eventUrl = new CalendarEvent(eventDetails).link;
+    console.log('Event URL: ', eventUrl);
   });
 });
