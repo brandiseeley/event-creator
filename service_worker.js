@@ -2,6 +2,7 @@
 
 import createCalendarLinkFromText from './createCalendarLinkFromText.js';
 
+// Create new context-menu option
 chrome.runtime.onInstalled.addListener(async () => {
   chrome.contextMenus.create({
     id: 'create-event',
@@ -10,6 +11,7 @@ chrome.runtime.onInstalled.addListener(async () => {
   });
 });
 
+// Handle 'create-event' context-menu click
 chrome.contextMenus.onClicked.addListener(async (info) => {
   if (info.menuItemId !== 'create-event') return;
 
