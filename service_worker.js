@@ -20,6 +20,7 @@ chrome.contextMenus.onClicked.addListener(async (info) => {
     chrome.storage.local.set({
       status: 'loading',
       inputText: info.selectionText,
+      error: null,
     });
 
     // Open popup to show loading status
@@ -32,8 +33,14 @@ chrome.contextMenus.onClicked.addListener(async (info) => {
     chrome.storage.local.set({
       status: 'success',
       calendarUrl: url,
+      error: null,
     });
   } catch (err) {
-    console.error(err);
+    // Set status to error with user-friendly message
+    chrome.storage.local.set({
+      status: 'error',
+      error: err.message || 'An unexpected error occurred',
+      calendarUrl: null,
+    });
   }
 });
