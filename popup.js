@@ -1,8 +1,6 @@
 /* eslint-disable max-classes-per-file */
 /* global document chrome */
 
-import createCalendarLinkFromText from './createCalendarLinkFromText.js';
-
 /**
  * CalendarView
  *
@@ -56,8 +54,8 @@ class CalendarView {
 /**
  * CalendarController
  *
- * Orchestrates the flow: listens for user actions, updates state,
- * calls createCalendarLinkFromText, and tells CalendarView to render.
+ * Orchestrates the flow: manages state and tells CalendarView to render.
+ * Listens for chrome.storage changes and updates the view accordingly.
  */
 class CalendarController {
   constructor() {
@@ -68,15 +66,9 @@ class CalendarController {
     };
 
     this.view = new CalendarView();
-
-    this.testButton = document.getElementById('testButton');
   }
 
   init() {
-    if (this.testButton) {
-      this.testButton.addEventListener('click', () => this.handleClick());
-    }
-
     // Render initial state
     this.render();
 
@@ -92,19 +84,6 @@ class CalendarController {
     // Initial render from storage
     chrome.storage.local.get(['status', 'calendarUrl', 'error'])
       .then((data) => this.setState(data));
-  }
-
-  async handleClick() {
-    this.setState({ status: 'loading' });
-
-    const text = "LS Women's Group | Fundamentals at Work | Sunday, December 21st | 2PM ET / 11AM PT / 8PM CET";
-
-    try {
-      const url = await createCalendarLinkFromText(text);
-      this.setState({ status: 'success', calendarUrl: url });
-    } catch (err) {
-      this.setState({ status: 'error', error: err.message });
-    }
   }
 
   setState(next) {
