@@ -1,0 +1,24 @@
+[project]
+name = "api"
+version = "0.1.0"
+description = ""
+authors = [
+    {name = "Brandi Seeley",email = "brandi.n.seeley@gmail.com"}
+]
+readme = "README.md"
+requires-python = ">=3.12,<4.0"
+dependencies = [
+    "flask (>=3.1.2,<4.0.0)",
+    "flask-cors (>=6.0.2,<7.0.0)"
+]
+
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry]
+name = "event-creator-api"
+version = "0.1.0"
+description = "Backend API for the event creator extension"
+package-mode = false
