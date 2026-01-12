@@ -66,10 +66,6 @@ class CalendarController {
     };
 
     this.view = new CalendarView();
-
-    this.apiKeyForm = document.getElementById('apiKeyForm');
-    this.apiKeyInput = document.getElementById('apiKey');
-    this.apiKeyMessage = document.getElementById('apiKeyMessage');
   }
 
   init() {
@@ -88,28 +84,6 @@ class CalendarController {
     // Initial render from storage
     chrome.storage.local.get(['status', 'calendarUrl', 'error'])
       .then((data) => this.setState(data));
-
-    // API key form handling
-    if (this.apiKeyForm) {
-      this.apiKeyForm.addEventListener('submit', async (event) => {
-        event.preventDefault();
-        const key = this.apiKeyInput.value.trim();
-
-        if (!key || !key.startsWith('sk-') || key.length < 20) {
-          this.apiKeyMessage.textContent = 'Invalid API key.';
-          return;
-        }
-
-        try {
-          await chrome.storage.local.set({ apiKey: key });
-          this.apiKeyMessage.textContent = 'API key saved!';
-          this.setState({ apiKey: key });
-        } catch (err) {
-          this.apiKeyMessage.textContent = 'Failed to save API key.';
-          console.error(err);
-        }
-      });
-    }
   }
 
   setState(next) {
