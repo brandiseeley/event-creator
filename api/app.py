@@ -5,8 +5,8 @@ from flask import Flask, jsonify, request
 from flask_cors import CORS
 from dotenv import load_dotenv
 
-from lib.parse_event import parse_event
-from lib.google_calendar import CalendarEvent
+from src.parse_event import parse_event
+from src.google_calendar import CalendarEvent
 
 load_dotenv()  # loads environment variables from .env
 

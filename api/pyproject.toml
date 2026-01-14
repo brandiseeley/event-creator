@@ -23,4 +23,11 @@ build-backend = "poetry.core.masonry.api"
 name = "event-creator-api"
 version = "0.1.0"
 description = "Backend API for the event creator extension"
-package-mode = false
+package-mode = true
+
+packages = [
+  { include = "src" }
+]
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^9.0.2"
