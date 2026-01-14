@@ -5,7 +5,6 @@ from unstructured text using OpenAI's GPT-4o model.
 
 import json
 from datetime import datetime, timezone
-import re
 
 import openai
 
@@ -63,17 +62,25 @@ calendar_event_json_schema = {
 
 
 def _is_valid_date(date_string, nullable=False):
-    """Ensure the date string is in the format YYYY-MM-DD."""
+    """Ensure the date string is in the format YYYY-MM-DD and a real date."""
     if nullable and date_string is None:
         return True
-    return bool(re.match(r"^\d{4}-\d{2}-\d{2}$", str(date_string)))
+    try:
+        datetime.strptime(date_string, "%Y-%m-%d")
+        return True
+    except (ValueError, TypeError):
+        return False
 
 
 def _is_valid_time(time_string, nullable=False):
-    """Ensure the time string is in the format HH:MM."""
+    """Ensure the time string is in the format HH:MM and a real time."""
     if nullable and time_string is None:
         return True
-    return bool(re.match(r"^\d{2}:\d{2}$", str(time_string)))
+    try:
+        datetime.strptime(time_string, "%H:%M")
+        return True
+    except (ValueError, TypeError):
+        return False
 
 
 def _extract_event_info(text: str, api_key: str):
