@@ -12,6 +12,7 @@ class CalendarView {
     this.statusEl = document.getElementById('status');
     this.calendarUrlEl = document.getElementById('calendarUrl');
     this.errorEl = document.getElementById('error');
+    this.idEl = document.getElementById('extensionId');
 
     // Open calendar links in new tab
     this.calendarUrlEl.addEventListener('click', (event) => {
@@ -28,14 +29,17 @@ class CalendarView {
     switch (state.status) {
       case 'loading':
         this.statusEl.textContent = 'Loading. Please wait...';
+        this.idEl.textContent = state.extensionId;
         break;
       case 'success':
         this.statusEl.textContent = 'Success!';
         this.calendarUrlEl.textContent = 'Google Calendar URL';
         this.calendarUrlEl.href = state.calendarUrl;
+        this.idEl.textContent = state.extensionId;
         break;
       case 'error':
         this.errorEl.textContent = state.error;
+        this.idEl.textContent = state.extensionId;
         break;
       default:
         // idle: already cleared
@@ -48,6 +52,7 @@ class CalendarView {
     this.calendarUrlEl.textContent = '';
     this.calendarUrlEl.href = '#';
     this.errorEl.textContent = '';
+    this.idEl.textContent = '';
   }
 }
 
@@ -76,7 +81,7 @@ class CalendarController {
     chrome.storage.onChanged.addListener((changes, area) => {
       if (area !== 'local') return;
       if (changes.status) {
-        chrome.storage.local.get(['status', 'calendarUrl', 'error'])
+        chrome.storage.local.get(['status', 'calendarUrl', 'error', 'extensionId'])
           .then((data) => this.setState(data));
       }
     });
