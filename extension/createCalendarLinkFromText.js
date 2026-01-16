@@ -6,8 +6,11 @@ export default async function createCalendarLinkFromText(text, id) {
   try {
     const response = await fetch('http://localhost:5001/parse-event', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ text, id }),
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Client-UUID': id,
+      },
+      body: JSON.stringify({ text }),
     });
 
     if (!response.ok) {

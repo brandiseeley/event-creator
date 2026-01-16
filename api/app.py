@@ -28,17 +28,19 @@ def create_app():
 
     @app.post("/parse-event")
     def parse_event_endpoint():
-        data = request.get_json(silent=True)
         logger.info("Received /parse-event request")
 
+        client_uuid = request.headers.get("X-Client-UUID")
+        if not client_uuid:
+            logger.warning("Missing X-Client-UUID header")
+            return jsonify({"error": "Missing required header: X-Client-UUID"}), 400
+
+        data = request.get_json(silent=True)
         if not data or "text" not in data:
             logger.warning("Request missing 'text' field")
             return jsonify({"error": "Missing required field: text"}), 400
-        if not "id" in data:
-            return jsonify({"error": "Missing required field: id"}), 400
 
         user_text = data["text"]
-        user_id = data["id"] # Currently not being used; will be used for rate limiting
 
         api_key = os.environ.get("OPENAI_API_KEY")
         if not api_key:
