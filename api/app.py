@@ -4,9 +4,11 @@ import logging
 from flask import Flask, jsonify, request
 from flask_cors import CORS
 from dotenv import load_dotenv
+from redis import RedisError
 
 from src.parse_event import parse_event
 from src.google_calendar import CalendarEvent
+from src.redis_client import redis_client
 
 load_dotenv()  # loads environment variables from .env
 
@@ -30,6 +32,7 @@ def create_app():
     def parse_event_endpoint():
         logger.info("Received /parse-event request")
 
+        # Parse Request Information
         client_uuid = request.headers.get("X-Client-UUID")
         if not client_uuid:
             logger.warning("Missing X-Client-UUID header")
@@ -47,6 +50,24 @@ def create_app():
             logger.error("Missing OpenAI API key in environment")
             return jsonify({"error": "Server misconfigured: missing OpenAI API key"}), 500
 
+        # Rate Limiting
+        key = f"ratelimit:{client_uuid}:parse-event"
+        try:
+            count = redis_client.incr(key)
+            if count == 1:
+                redis_client.expire(key, 180) # 2 minute expiration for testing
+
+            if count > 2: # Low request limit for testing
+                ttl = redis_client.ttl(key)
+                return jsonify({
+                    "error": "Rate limit exceeded",
+                    "retry_after_seconds": ttl
+                }), 429
+        except RedisError as e:
+            # Fail open if Redis is down
+            logger.error("Error while enforcing rate limiting: %s", e)
+
+        # Create Event
         try:
             # Parse the event from text
             logger.info("Parsing event text via OpenAI API: %s", user_text)
