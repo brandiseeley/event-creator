@@ -1,6 +1,12 @@
+const TEXT_LENGTH_LIMIT = 4000;
+
 export default async function createCalendarLinkFromText(text, id) {
   if (!text || typeof text !== 'string' || text.trim().length === 0) {
     throw new Error('Please provide text to parse into a calendar event.');
+  }
+
+  if (text.length > TEXT_LENGTH_LIMIT) {
+    throw new Error('Selected text is too long, please make a smaller selection.');
   }
 
   try {
