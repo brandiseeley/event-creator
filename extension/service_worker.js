@@ -31,7 +31,10 @@ chrome.contextMenus.onClicked.addListener(async (info) => {
     chrome.action.openPopup();
 
     // Generate event
-    const url = await createCalendarLinkFromText(info.selectionText);
+    const url = await createCalendarLinkFromText(
+      info.selectionText,
+      extensionId,
+    );
 
     // Set status to success
     chrome.storage.local.set({

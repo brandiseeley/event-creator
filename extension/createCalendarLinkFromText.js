@@ -1,4 +1,4 @@
-export default async function createCalendarLinkFromText(text) {
+export default async function createCalendarLinkFromText(text, id) {
   if (!text || typeof text !== 'string' || text.trim().length === 0) {
     throw new Error('Please provide text to parse into a calendar event.');
   }
@@ -7,7 +7,7 @@ export default async function createCalendarLinkFromText(text) {
     const response = await fetch('http://localhost:5001/parse-event', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ text }),
+      body: JSON.stringify({ text, id }),
     });
 
     if (!response.ok) {

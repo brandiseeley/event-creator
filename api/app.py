@@ -34,8 +34,11 @@ def create_app():
         if not data or "text" not in data:
             logger.warning("Request missing 'text' field")
             return jsonify({"error": "Missing required field: text"}), 400
+        if not "id" in data:
+            return jsonify({"error": "Missing required field: id"}), 400
 
         user_text = data["text"]
+        user_id = data["id"] # Currently not being used; will be used for rate limiting
 
         api_key = os.environ.get("OPENAI_API_KEY")
         if not api_key:
